@@ -30,6 +30,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private Barre barre;
   private Boule boule;
   private Mur mur;
+  private int vie;
 
 
 
@@ -78,6 +79,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   // Traitement central exécuté avec une périodicité précise
   public void run() {
     fini=false;
+    vie=3;
     while (!fini) {
       // Selon la phase du jeu ...
       switch (phase) {
@@ -124,8 +126,13 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
               else {
                 // Si la boule touche le fond ...
                 if (boule.getY() > 310 + barre.getHauteur() - boule.getRayon()) {
-                  // Loupé !!
-                  phase = SORT;                
+                  if (vie <= 0)
+                    phase = SORT;
+
+                  else{
+                    vie-=1;
+                    phase = ATTEND;
+                  }
 				}
               }
 
