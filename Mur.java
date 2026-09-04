@@ -1,6 +1,7 @@
 //package cassebriques;
 
 import java.awt.Graphics2D;
+import java.util.Random;
 
 class Mur {
   private Brique[][] mur=new Brique[10][20];
@@ -8,15 +9,20 @@ class Mur {
 
 
   public void construit() {
+    Random random=new Random();
+
     // Affectaion aléatoire de briques au mur
     for(int l=0; l<10; l++) {
       for(int c=0; c<20; c++) {
-        switch ((int)(Math.random()*10)) {
+        switch (random.nextInt(3, 4)) {
           case 1 :
             mur[l][c]=new BriqueRetourNorme();
             break;
           case 2 :
             mur[l][c]=new BriqueBouleRapide();
+            break;
+          case 3 :
+            mur[l][c]=new BriqueRenforcee();
             break;
           default :
             mur[l][c]=new Brique();

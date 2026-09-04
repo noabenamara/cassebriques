@@ -79,7 +79,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   // Traitement central exécuté avec une périodicité précise
   public void run() {
     fini=false;
-    vie=3;
+    vie=1000;
     while (!fini) {
       // Selon la phase du jeu ...
       switch (phase) {
