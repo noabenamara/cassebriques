@@ -79,7 +79,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   // Traitement central exécuté avec une périodicité précise
   public void run() {
     fini=false;
-    vie=1000;
+    vie=3;
     while (!fini) {
       // Selon la phase du jeu ...
       switch (phase) {
@@ -215,10 +215,13 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
             }
             // Casse effective des brique du mur
             //(et mise en place des conséquences)
+            // Frappe la brique 1 seul fois si 2 coins de la boule la touche
+            //  pour éviter que briqueRenforcee se fassent toucher plusieurs fois en une iteration
+            // voir coin_brique.png
             modifJeu(mur.casse(l1,c1));
-            modifJeu(mur.casse(l1,c2));
-            modifJeu(mur.casse(l2,c1));
-            modifJeu(mur.casse(l2,c2));
+            if (c1 != c2) modifJeu(mur.casse(l1,c2));
+            if (l1 != l2) modifJeu(mur.casse(l2,c1));
+            if (l1 != l2 && c1 != c2) modifJeu(mur.casse(l2,c2));
 
             // Si toutes les briques sont cassées ...
             if (mur.getNbBriques()==0) {

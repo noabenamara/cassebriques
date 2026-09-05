@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.ListIterator;
 
 class BriqueRenforcee extends Brique {
-    private final ListIterator<Color> colorList = Arrays.asList(Color.darkGray, Color.gray).listIterator();
+    private final ListIterator<Color> colorList = Arrays.asList(Color.darkGray, Color.gray, Color.lightGray).listIterator();
     private final int SIMPLE=0;
 
     public BriqueRenforcee() {
@@ -14,10 +14,8 @@ class BriqueRenforcee extends Brique {
     }
 
     public int choc() {
-        System.out.println("Has next: " + colorList.hasNext());
         if (colorList.hasNext())
             couleur = colorList.next();
-        
         else 
             super.choc();
 
