@@ -7,6 +7,10 @@ import java.awt.event.*;
 class EspaceJeu extends JPanel implements Runnable, MouseListener,
                                           MouseMotionListener {
 
+  // valeur par defaut du joueur
+  private final int VIE = 3;
+  private final int VAGUE = 0;
+
   // Delai entre 2 déplacements
   private final int DELAI=16;
 
@@ -31,7 +35,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private Boule boule;
   private Mur mur;
   private int vie;
-
+  private int vague;
 
 
   public EspaceJeu() {
@@ -46,6 +50,12 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
 
     // phase d'attente
     phase=ATTEND;
+
+    // vie du joueur
+    vie = VIE;
+
+    // nombre de vague
+    vague = VAGUE;
 
     // Gestion des évenement liés à la souris
       addMouseMotionListener(this);
@@ -71,15 +81,27 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     phase= ATTEND;
     delai = DELAI;
 
+    // vie du joueur
+    vie = VIE;
+
+    // nombre de vague
+    vague = VAGUE;
+
     // Lancement de l'exécution du jeu dans un thread
     action = new Thread(this);
     action.start();
+  }
+  public void changeNiveaux() {
+    mur.construit();
+    phase=ATTEND;
+    delai=DELAI;
+    vie=VIE;
   }
 
   // Traitement central exécuté avec une périodicité précise
   public void run() {
     fini=false;
-    vie=3;
+    vie=VIE;
     while (!fini) {
       // Selon la phase du jeu ...
       switch (phase) {
@@ -126,13 +148,8 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
               else {
                 // Si la boule touche le fond ...
                 if (boule.getY() > 310 + barre.getHauteur() - boule.getRayon()) {
-                  if (vie <= 0)
-                    phase = SORT;
-
-                  else{
-                    vie-=1;
-                    phase = ATTEND;
-                  }
+                  vie-=1;
+                  phase = (vie <= 0) ? SORT : ATTEND;
 				}
               }
 
@@ -238,9 +255,10 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           break;
 
         case GAGNE :
-          JOptionPane.showMessageDialog(this,"Bravo, vous avez gagné !",
+          JOptionPane.showMessageDialog(this,"Bravo, vous avez fini la vague "+vague,
                          "Casse briques",JOptionPane.INFORMATION_MESSAGE);
-          fini=true;
+          vague++;
+          changeNiveaux();
           break;
       }
 
