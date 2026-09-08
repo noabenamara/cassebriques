@@ -3,6 +3,8 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 class EspaceJeu extends JPanel implements Runnable, MouseListener,
                                           MouseMotionListener {
@@ -24,7 +26,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private final int SIMPLE=0;
   private final int NORME=1;
   private final int RAPIDE=2;
-  
+  private final int BONUS_VIE=3;
 
   // Champs d'instance
   private Thread action;
@@ -37,6 +39,8 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private int vie;
   private int vague;
 
+  // liste des nouveaux objet actif sur l'ecran
+  private List<Bonus> Lbonus = new ArrayList<>();
 
   public EspaceJeu() {
 
@@ -181,44 +185,29 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
               }
               else {
                 // et coin inférieur gauche
-                if (mur.percute(l2,c1)) {
-                  // Choc horizontal
-                  boule.chocH();
-                }
-                else {
-                  // Double choc
+                boule.chocH();
+                if (!mur.percute(l2, c1)) 
+                  // Choc vertical
                   boule.chocV();
-                  boule.chocH();
-                }
               }
             }
             else {
               // Coin supérieur droit ...
               if (mur.percute(l1,c2)) {
                 // et coin inférieur droit
-                if (mur.percute(l2,c2)) {
-                  // Choc horizontal
-                  boule.chocH();
-                }
-                else {
-                  // Double choc
+                boule.chocH();
+                if (!mur.percute(l2,c2)) 
+                  // Choc vertical
                   boule.chocV();
-                  boule.chocH();
-                }
               }
               else {
                 // Coin inférieur gauche ...
                 if (mur.percute(l2,c1)) {
                   // et coin inférieur droit
-                  if (mur.percute(l2,c2)) {
-                    // Choc vertical
                     boule.chocV();
-                  }
-                  else {
-                    // Double choc
-                    boule.chocV();
+                  if (!mur.percute(l2,c2)) 
+                    // Choc horizontal
                     boule.chocH();
-                  }
                 }
                 else {
                   // Coin inférieur droit
@@ -234,11 +223,15 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
             //(et mise en place des conséquences)
             // Frappe la brique 1 seul fois si 2 coins de la boule la touche
             //  pour éviter que briqueRenforcee se fassent toucher plusieurs fois en une iteration
-            // voir coin_brique.png
-            modifJeu(mur.casse(l1,c1));
-            if (c1 != c2) modifJeu(mur.casse(l1,c2));
-            if (l1 != l2) modifJeu(mur.casse(l2,c1));
-            if (l1 != l2 && c1 != c2) modifJeu(mur.casse(l2,c2));
+            // voir coin_brique.png:
+            // ainsi que le spawn des bonus
+            for (int[] lc : new int[][] {{l1, c1}, {l1, c2}, {l2, c1}, {l2, c2}}) {
+              if (mur.percute(lc[0], lc[1])) {
+                modifJeu(mur.casse(lc[0], lc[1]));
+                if (mur.getBrique(lc[0], lc[1]).getBonus() != null)
+                  Lbonus.add(mur.getBrique(lc[0], lc[1]).getBonus());
+              }
+            }
 
             // Si toutes les briques sont cassées ...
             if (mur.getNbBriques()==0) {
@@ -261,6 +254,24 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           changeNiveaux();
           break;
       }
+
+      List<Bonus> removable_bonus = new ArrayList<>();
+      for (Bonus bonus : Lbonus) {
+        bonus.deplace();
+        if (bonus.getX() - bonus.getLargeur() < barre.getX() + barre.getMiLargeur()
+            &&
+            bonus.getX() + bonus.getLargeur() > barre.getX() - barre.getMiLargeur()
+            &&
+            bonus.getY() - bonus.getHauteur() < barre.getY()
+            &&
+            bonus.getY() + bonus.getHauteur() > barre.getY()) {
+          modifJeu(bonus.getEffect());
+          removable_bonus.add(bonus);
+        }
+        else if (bonus.getY() - bonus.getHauteur() > 310)
+          removable_bonus.add(bonus);
+      }
+      Lbonus.removeAll(removable_bonus);
 
       // on redessine l'espace de jeu
       repaint();
@@ -306,6 +317,9 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           // Accélération du traitement
           delai=(int)(DELAI/2);
           break;
+        case BONUS_VIE:
+          vie++;
+          break;
       }
     }
 
@@ -325,6 +339,8 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     barre.dessine(comp2D);
     // Dessin de la boule
     boule.dessine(comp2D);
+    // dessine les bonus
+    Lbonus.forEach((bonus) -> {bonus.dessine(comp2D);});
     // Dessin du mur de brique
     // Au tout départ le mur n'existe pas
     if(mur!=null)

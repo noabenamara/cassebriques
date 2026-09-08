@@ -24,6 +24,9 @@ class Mur {
           case 3 :
             mur[l][c]=new BriqueRenforcee();
             break;
+          case 4 :
+            mur[l][c]=new BriqueVie();
+            break;
           default :
             mur[l][c]=new Brique();
         }
@@ -93,6 +96,9 @@ class Mur {
           mur[l][c].dessine(support);
       }
     }
+  }
+  public Brique getBrique(int l, int c){
+    return mur[l][c];
   }
 
 }

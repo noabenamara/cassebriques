@@ -5,15 +5,18 @@ import java.awt.*;
 
 class Brique {
   private final int SIMPLE=0;
-  private int x, y, largeur, hauteur;
+  private int largeur, hauteur;
+  protected int x, y;
   protected Color couleur;
   protected boolean detruite;
+  protected Bonus contiensBonus;
 
   public Brique() {
     largeur=17;
     hauteur=14;
     couleur=Color.green;
     detruite=false;
+    contiensBonus=null;
   }
 
   public int choc() {
@@ -31,6 +34,10 @@ public boolean isDetruite() {
 public void positionne(int newX, int newY) {
   x=newX;
   y=newY;
+  if (contiensBonus != null){
+    contiensBonus.setX(x);
+    contiensBonus.setY(y);
+  }
 }
 
 public int getHauteur() {
@@ -39,6 +46,9 @@ public int getHauteur() {
 
 public int getLargeur() {
   return largeur;
+}
+public Bonus getBonus(){
+  return contiensBonus;
 }
 
 public void dessine(Graphics2D motif){
