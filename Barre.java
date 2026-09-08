@@ -8,12 +8,26 @@ class Barre {
   private int x, y, miLargeur, hauteur;
   private Color couleur;
 
+  // Largeur de référence (valeur d'origine) et largeur minimale autorisée
+  private final int MI_LARGEUR_DEFAUT=25;
+  private final int MI_LARGEUR_MIN=8;
+
   public Barre() {
     x=175;
     y=310;
-    miLargeur=25;
+    miLargeur=MI_LARGEUR_DEFAUT;
     hauteur=9;
     couleur = Color.blue;
+  }
+
+  // Réduit la demi-largeur de la barre, sans descendre sous le minimum
+  public void retrecit(int valeur) {
+    miLargeur = Math.max(MI_LARGEUR_MIN, miLargeur - valeur);
+  }
+
+  // Remet la barre à sa largeur d'origine (utilisé par la brique rose)
+  public void reinitialiseLargeur() {
+    miLargeur = MI_LARGEUR_DEFAUT;
   }
 
   public int getX() {

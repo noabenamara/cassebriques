@@ -20,6 +20,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private final int SIMPLE=0;
   private final int NORME=1;
   private final int RAPIDE=2;
+  private final int RETRECIT=3;
   
 
   // Champs d'instance
@@ -270,13 +271,19 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     public void modifJeu(int action) {
       switch (action) {
         case NORME :
-          // Retour aux valeurs de base
+          // Retour aux valeurs de base : vitesse ET largeur de la barre
           delai=DELAI;
+          barre.reinitialiseLargeur();
           break;
 
         case RAPIDE :
           // Accélération du traitement
           delai=(int)(DELAI/2);
+          break;
+
+        case RETRECIT :
+          // La barre rétrécit à chaque brique orange cassée
+          barre.retrecit(4);
           break;
       }
     }
