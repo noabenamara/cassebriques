@@ -47,7 +47,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
 
     // phase d'attente
     phase=ATTEND;
-    vies=3;
+    //vies=3;
 
     // Gestion des évenement liés à la souris
       addMouseMotionListener(this);
@@ -57,6 +57,8 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   }
 
   public void initialiseNiveau() {
+
+    vies =3;
 
     // Arrêt du thread action s'il est en cours d'exécution.
     fini=true;
