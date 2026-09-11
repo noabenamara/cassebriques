@@ -8,6 +8,6 @@ class BriqueVie extends Brique {
     public BriqueVie() {
         super();
         couleur = Color.BLUE;
-        contiensBonus = new bonusVie();
+        contiensBonus = new BonusVie();
     }
 }
