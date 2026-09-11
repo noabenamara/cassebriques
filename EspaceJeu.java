@@ -31,6 +31,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private Barre barre;
   private Boule boule;
   private Mur mur;
+  private int vies=3;
 
 
 
@@ -46,6 +47,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
 
     // phase d'attente
     phase=ATTEND;
+    vies=3;
 
     // Gestion des évenement liés à la souris
       addMouseMotionListener(this);
@@ -223,9 +225,15 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           break;
 
         case SORT :
-          JOptionPane.showMessageDialog(this,"C'est perdu !","Casse briques",
-                        JOptionPane.INFORMATION_MESSAGE);
-          fini=true;
+          vies--;
+          if (vies == 0) {
+            JOptionPane.showMessageDialog(this,"GAME OVER !","Casse briques",
+                          JOptionPane.INFORMATION_MESSAGE);
+            fini=true;
+          }
+          else {
+            phase=ATTEND;
+          }
           break;
 
         case GAGNE :
@@ -297,17 +305,26 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
 
   public void paintComponent(Graphics comp) {
     Graphics2D comp2D = (Graphics2D)comp;
+
     // Effacement de l'espace de jeu
     comp2D.setColor(getBackground());
     comp2D.fillRect(0,0,getSize().width,getSize().height);
+
     // Dessin de la barre
     barre.dessine(comp2D);
+
     // Dessin de la boule
     boule.dessine(comp2D);
+
     // Dessin du mur de brique
     // Au tout départ le mur n'existe pas
     if(mur!=null)
       mur.dessine(comp2D);
+
+    // Affichage du nombre de vies restantes
+    comp2D.setColor(Color.BLACK);
+    comp2D.setFont(new Font("Arial", Font.BOLD, 12));
+    comp2D.drawString("Vies : " + vies, 10, 250);
   }
 
   // Méthodes de l'interface MouseMotionListener
