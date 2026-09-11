@@ -2,9 +2,8 @@
 
 import java.awt.*;
 
-
 class Brique {
-  private final int SIMPLE=0;
+  private final int SIMPLE = 0;
   private int largeur, hauteur;
   protected int x, y;
   protected Color couleur;
@@ -12,49 +11,50 @@ class Brique {
   protected Bonus contiensBonus;
 
   public Brique() {
-    largeur=17;
-    hauteur=14;
-    couleur=Color.green;
-    detruite=false;
-    contiensBonus=null;
+    largeur = 17;
+    hauteur = 14;
+    couleur = Color.green;
+    detruite = false;
+    contiensBonus = null;
   }
 
   public int choc() {
     // Si la brique n'est pas déjà détruite
     if (!detruite) {
-      detruite=true;
+      detruite = true;
     }
     return SIMPLE;
   }
 
-public boolean isDetruite() {
-  return detruite;
-}
-
-public void positionne(int newX, int newY) {
-  x=newX;
-  y=newY;
-  if (contiensBonus != null){
-    contiensBonus.setX(x);
-    contiensBonus.setY(y);
+  public boolean isDetruite() {
+    return detruite;
   }
-}
 
-public int getHauteur() {
-  return hauteur;
-}
+  public void positionne(int newX, int newY) {
+    x = newX;
+    y = newY;
+    if (contiensBonus != null) {
+      contiensBonus.setX(x);
+      contiensBonus.setY(y);
+    }
+  }
 
-public int getLargeur() {
-  return largeur;
-}
-public Bonus getBonus(){
-  return contiensBonus;
-}
+  public int getHauteur() {
+    return hauteur;
+  }
 
-public void dessine(Graphics2D motif){
-  // Dessin de la brique
-  motif.setColor(couleur);
-  motif.fillRect(x,y,largeur,hauteur);
-}
+  public int getLargeur() {
+    return largeur;
+  }
+
+  public Bonus getBonus() {
+    return contiensBonus;
+  }
+
+  public void dessine(Graphics2D motif) {
+    // Dessin de la brique
+    motif.setColor(couleur);
+    motif.fillRect(x, y, largeur, hauteur);
+  }
 
 }

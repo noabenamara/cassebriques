@@ -6,28 +6,26 @@ public class Bonus {
     protected boolean isdetruite;
     protected int effect;
 
-    public Bonus(){
-    largeur=17;
-    hauteur=14;
-    vitesse=1;
-    couleur = Color.BLACK;
-    effect=0;
+    public Bonus() {
+        largeur = 17;
+        hauteur = 14;
+        vitesse = 1;
+        couleur = Color.BLACK;
+        effect = 0;
     }
 
     public void deplace() {
-        y+=vitesse;
+        y += vitesse;
     }
 
     public boolean isDetruite() {
         return isdetruite;
     }
 
-    public void dessine(Graphics2D motif){
-    motif.setColor(couleur);
-    motif.fillRect(x,y,largeur,hauteur);
+    public void dessine(Graphics2D motif) {
+        motif.setColor(couleur);
+        motif.fillRect(x, y, largeur, hauteur);
     }
-
-
 
     public void setX(int x) {
         this.x = x;
@@ -36,6 +34,7 @@ public class Bonus {
     public void setY(int y) {
         this.y = y;
     }
+
     public int getX() {
         return x;
     }

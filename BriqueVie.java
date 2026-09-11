@@ -5,9 +5,9 @@ import java.awt.Color;
  */
 class BriqueVie extends Brique {
 
-    public BriqueVie() {
-        super();
-        couleur=Color.BLUE;
-        contiensBonus = new bonusVie();
-    }
+  public BriqueVie() {
+    super();
+    couleur = Color.BLUE;
+    contiensBonus = new bonusVie();
+  }
 }

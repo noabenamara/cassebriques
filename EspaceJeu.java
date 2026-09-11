@@ -7,26 +7,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 class EspaceJeu extends JPanel implements Runnable, MouseListener,
-                                          MouseMotionListener {
+    MouseMotionListener {
 
   // valeur par defaut du joueur
   private final int VIE = 3;
   private final int VAGUE = 0;
 
   // Delai entre 2 déplacements
-  private final int DELAI=16;
+  private final int DELAI = 16;
 
   // Constantes rattachées aux phases de jeu
-  private final int ATTEND=1;
-  private final int ROULE=2;
-  private final int SORT=3;
-  private final int GAGNE=4;
+  private final int ATTEND = 1;
+  private final int ROULE = 2;
+  private final int SORT = 3;
+  private final int GAGNE = 4;
 
   // Constantes rattachées aux types de briques
-  private final int SIMPLE=0;
-  private final int NORME=1;
-  private final int RAPIDE=2;
-  private final int BONUS_VIE=3;
+  private final int SIMPLE = 0;
+  private final int NORME = 1;
+  private final int RAPIDE = 2;
+  private final int BONUS_VIE = 3;
 
   // Champs d'instance
   private Thread action;
@@ -45,15 +45,15 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   public EspaceJeu() {
 
     // Création de la barre
-    barre=new Barre();
+    barre = new Barre();
     // Création de la boule
-    boule=new Boule();
+    boule = new Boule();
 
     // Délai entre 2 déplacements
-    delai=DELAI;
+    delai = DELAI;
 
     // phase d'attente
-    phase=ATTEND;
+    phase = ATTEND;
 
     // vie du joueur
     vie = VIE;
@@ -65,27 +65,27 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     Lbonus = new ArrayList<>();
 
     // Gestion des évenement liés à la souris
-      addMouseMotionListener(this);
-      addMouseListener(this);
-
+    addMouseMotionListener(this);
+    addMouseListener(this);
 
   }
 
   public void initialiseNiveau() {
 
     // Arrêt du thread action s'il est en cours d'exécution.
-    fini=true;
-    if(action != null) {
-      while(action.isAlive());
+    fini = true;
+    if (action != null) {
+      while (action.isAlive())
+        ;
     }
 
     // Création du mur de brique
-    if (mur==null) {
-      mur=new Mur();
+    if (mur == null) {
+      mur = new Mur();
     }
     mur.construit();
     // Premiére phase du jeu
-    phase= ATTEND;
+    phase = ATTEND;
     delai = DELAI;
 
     // vie du joueur
@@ -101,18 +101,19 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     action = new Thread(this);
     action.start();
   }
+
   public void changeNiveaux() {
     mur.construit();
-    phase=ATTEND;
-    delai=DELAI;
-    vie=VIE;
+    phase = ATTEND;
+    delai = DELAI;
+    vie = VIE;
     Lbonus.clear();
   }
 
   // Traitement central exécuté avec une périodicité précise
   public void run() {
-    fini=false;
-    vie=VIE;
+    fini = false;
+    vie = VIE;
     while (!fini) {
       // Selon la phase du jeu ...
       switch (phase) {
@@ -122,7 +123,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           boule.place(barre.getX(), barre.getY() - boule.getRayon());
           break;
 
-          // La boule roule
+        // La boule roule
         case ROULE:
           // Déplacement de la boule
           boule.deplace();
@@ -130,8 +131,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           if (boule.getX() < boule.getRayon()) {
             boule.chocH();
             boule.place(boule.getRayon(), boule.getY());
-          }
-          else {
+          } else {
             // Rebond sur le bord droit ?
             if (boule.getX() > getSize().width - boule.getRayon()) {
               boule.chocH();
@@ -143,25 +143,23 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           if (boule.getY() < boule.getRayon()) {
             boule.chocV();
             boule.place(boule.getX(), boule.getRayon());
-          }
-          else {
+          } else {
             // Rebond (ou non) sur la barre ?
             if (boule.getY() > 310 - boule.getRayon()) {
               if (boule.getX() - boule.getRayon() < barre.getX() + barre.getMiLargeur()
-              &&
-                boule.getX() + boule.getRayon() > barre.getX() - barre.getMiLargeur()) {
+                  &&
+                  boule.getX() + boule.getRayon() > barre.getX() - barre.getMiLargeur()) {
                 // Rebond sur la barre
                 // Le rebond dépend de la zone de la barre touchée
                 rebondSurBarre(boule.getX() - barre.getX());
 
-                boule.place(boule.getX(), 310-boule.getRayon());
-              }
-              else {
+                boule.place(boule.getX(), 310 - boule.getRayon());
+              } else {
                 // Si la boule touche le fond ...
                 if (boule.getY() > 310 + barre.getHauteur() - boule.getRayon()) {
-                  vie-=1;
+                  vie -= 1;
                   phase = (vie <= 0) ? SORT : ATTEND;
-				}
+                }
               }
 
             }
@@ -173,52 +171,48 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           // Récupération de la largeur d'une brique
           int largeur = mur.getLargeurBrique();
           // Si la boule se trouve dans la zone du mur de briques ...
-          if (boule.getY()-boule.getRayon()<10*(hauteur+1)){
+          if (boule.getY() - boule.getRayon() < 10 * (hauteur + 1)) {
             // l1, c1 sont les coordonnées du coin supérieur gauche de la boule
             // l2, c2 sont les coordonnées du coin inférieur droit de la boule
             int l1, l2, c1, c2;
-            l1=(int)((boule.getY()-boule.getRayon())/(hauteur+1));
-            l2=(int)((boule.getY()+boule.getRayon())/(hauteur+1));
-            c1=(int)((boule.getX()-boule.getRayon())/(largeur+1));
-            c2=(int)((boule.getX()+boule.getRayon())/(largeur+1));
+            l1 = (int) ((boule.getY() - boule.getRayon()) / (hauteur + 1));
+            l2 = (int) ((boule.getY() + boule.getRayon()) / (hauteur + 1));
+            c1 = (int) ((boule.getX() - boule.getRayon()) / (largeur + 1));
+            c2 = (int) ((boule.getX() + boule.getRayon()) / (largeur + 1));
 
             // Le rebond dépend des coins (1 ou 2) en contact avec une brique
             // Coin supérieur gauche ...
-            if (mur.percute(l1,c1)) {
+            if (mur.percute(l1, c1)) {
               // et coin supérieur droit
-              if (mur.percute(l1,c2)) {
+              if (mur.percute(l1, c2)) {
                 // Choc vertical
                 boule.chocV();
-              }
-              else {
+              } else {
                 // et coin inférieur gauche
                 boule.chocH();
-                if (!mur.percute(l2, c1)) 
+                if (!mur.percute(l2, c1))
                   // Choc vertical
                   boule.chocV();
               }
-            }
-            else {
+            } else {
               // Coin supérieur droit ...
-              if (mur.percute(l1,c2)) {
+              if (mur.percute(l1, c2)) {
                 // et coin inférieur droit
                 boule.chocH();
-                if (!mur.percute(l2,c2)) 
+                if (!mur.percute(l2, c2))
                   // Choc vertical
                   boule.chocV();
-              }
-              else {
+              } else {
                 // Coin inférieur gauche ...
-                if (mur.percute(l2,c1)) {
+                if (mur.percute(l2, c1)) {
                   // et coin inférieur droit
-                    boule.chocV();
-                  if (!mur.percute(l2,c2)) 
+                  boule.chocV();
+                  if (!mur.percute(l2, c2))
                     // Choc horizontal
                     boule.chocH();
-                }
-                else {
+                } else {
                   // Coin inférieur droit
-                  if (mur.percute(l2,c2)) {
+                  if (mur.percute(l2, c2)) {
                     // Double choc
                     boule.chocV();
                     boule.chocH();
@@ -227,12 +221,13 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
               }
             }
             // Casse effective des brique du mur
-            //(et mise en place des conséquences)
+            // (et mise en place des conséquences)
             // Frappe la brique 1 seul fois si 2 coins de la boule la touche
-            //  pour éviter que briqueRenforcee se fassent toucher plusieurs fois en une iteration
+            // pour éviter que briqueRenforcee se fassent toucher plusieurs fois en une
+            // iteration
             // voir coin_brique.png:
             // ainsi que le spawn des bonus
-            for (int[] lc : new int[][] {{l1, c1}, {l1, c2}, {l2, c1}, {l2, c2}}) {
+            for (int[] lc : new int[][] { { l1, c1 }, { l1, c2 }, { l2, c1 }, { l2, c2 } }) {
               if (mur.percute(lc[0], lc[1])) {
                 modifJeu(mur.casse(lc[0], lc[1]));
                 if (mur.getBrique(lc[0], lc[1]).getBonus() != null)
@@ -241,22 +236,22 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
             }
 
             // Si toutes les briques sont cassées ...
-            if (mur.getNbBriques()==0) {
+            if (mur.getNbBriques() == 0) {
               // Le joueur à gagné
-              phase=GAGNE;
+              phase = GAGNE;
             }
           }
           break;
 
-        case SORT :
-          JOptionPane.showMessageDialog(this,"C'est perdu !","Casse briques",
-                        JOptionPane.INFORMATION_MESSAGE);
-          fini=true;
+        case SORT:
+          JOptionPane.showMessageDialog(this, "C'est perdu !", "Casse briques",
+              JOptionPane.INFORMATION_MESSAGE);
+          fini = true;
           break;
 
-        case GAGNE :
-          JOptionPane.showMessageDialog(this,"Bravo, vous avez fini la vague "+vague,
-                         "Casse briques",JOptionPane.INFORMATION_MESSAGE);
+        case GAGNE:
+          JOptionPane.showMessageDialog(this, "Bravo, vous avez fini la vague " + vague,
+              "Casse briques", JOptionPane.INFORMATION_MESSAGE);
           vague++;
           changeNiveaux();
           break;
@@ -274,8 +269,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
             bonus.getY() + bonus.getHauteur() > barre.getY()) {
           modifJeu(bonus.getEffect());
           removable_bonus.add(bonus);
-        }
-        else if (bonus.getY() - bonus.getHauteur() > 310)
+        } else if (bonus.getY() - bonus.getHauteur() > 310)
           removable_bonus.add(bonus);
       }
       Lbonus.removeAll(removable_bonus);
@@ -285,7 +279,8 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
 
       try {
         Thread.sleep(delai);
-      } catch (InterruptedException e) {}
+      } catch (InterruptedException e) {
+      }
     }
   }
 
@@ -294,90 +289,101 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     boule.chocV();
     // La barre est divisée en 5 parties. Chaque partie provoque un rebond différent
     // Partie extréme gauche : Augmentation de l'angle de 30 degrés
-    if (impact<-(barre.getMiLargeur()*0.6))
+    if (impact < -(barre.getMiLargeur() * 0.6))
       boule.modifAngle(30);
     else
-      // Partie suivante : Augmentation de l'angle de 15 degrés
-      if (impact<-(barre.getMiLargeur()*0.2))
-        boule.modifAngle(15);
+    // Partie suivante : Augmentation de l'angle de 15 degrés
+    if (impact < -(barre.getMiLargeur() * 0.2))
+      boule.modifAngle(15);
 
     // Partie extréme droite : Diminution de l'angle de 30 degrés
-    if (impact>(barre.getMiLargeur()*0.6))
+    if (impact > (barre.getMiLargeur() * 0.6))
       boule.modifAngle(-30);
     else
-      // Partie précédante : Diminution de l'angle de 15 degrés
-      if (impact>(barre.getMiLargeur()*0.2))
-        boule.modifAngle(-15);
+    // Partie précédante : Diminution de l'angle de 15 degrés
+    if (impact > (barre.getMiLargeur() * 0.2))
+      boule.modifAngle(-15);
 
     // La partie centrale de la barre provoque un rebond normal
 
-    }
+  }
 
-    public void modifJeu(int action) {
-      switch (action) {
-        case NORME :
-          // Retour aux valeurs de base
-          delai=DELAI;
-          break;
+  public void modifJeu(int action) {
+    switch (action) {
+      case NORME:
+        // Retour aux valeurs de base
+        delai = DELAI;
+        break;
 
-        case RAPIDE :
-          // Accélération du traitement
-          delai=(int)(DELAI/2);
-          break;
-        case BONUS_VIE:
-          vie++;
-          break;
-      }
+      case RAPIDE:
+        // Accélération du traitement
+        delai = (int) (DELAI / 2);
+        break;
+      case BONUS_VIE:
+        vie++;
+        break;
     }
+  }
 
-    void lanceBoule(int angle) {
-          if (phase==ATTEND) {
-            phase=ROULE;
-            boule.angleDep(angle);
-          }
+  void lanceBoule(int angle) {
+    if (phase == ATTEND) {
+      phase = ROULE;
+      boule.angleDep(angle);
     }
+  }
 
   public void paintComponent(Graphics comp) {
-    Graphics2D comp2D = (Graphics2D)comp;
+    Graphics2D comp2D = (Graphics2D) comp;
     // Effacement de l'espace de jeu
     comp2D.setColor(getBackground());
-    comp2D.fillRect(0,0,getSize().width,getSize().height);
+    comp2D.fillRect(0, 0, getSize().width, getSize().height);
     // Dessin de la barre
     barre.dessine(comp2D);
     // Dessin de la boule
     boule.dessine(comp2D);
     // dessine les bonus
-    Lbonus.forEach((bonus) -> {bonus.dessine(comp2D);});
+    Lbonus.forEach((bonus) -> {
+      bonus.dessine(comp2D);
+    });
     // Dessin du mur de brique
     // Au tout départ le mur n'existe pas
-    if(mur!=null)
+    if (mur != null)
       mur.dessine(comp2D);
   }
 
   // Méthodes de l'interface MouseMotionListener
   public void mouseMoved(MouseEvent evt) {
     // Si le pointeur est trop à gauche ...
-    if (evt.getX()<barre.getMiLargeur())
+    if (evt.getX() < barre.getMiLargeur())
       // barre contre le bord gauche
       barre.setX(barre.getMiLargeur());
     else
-      // Si de pointeur est trop à droite ...
-      if (evt.getX()>getSize().width-barre.getMiLargeur())
-        // barre contre le bord droit
-        barre.setX(getSize().width-barre.getMiLargeur());
-      else
-        // barre centrée sur le pointeur
-        barre.setX(evt.getX());
+    // Si de pointeur est trop à droite ...
+    if (evt.getX() > getSize().width - barre.getMiLargeur())
+      // barre contre le bord droit
+      barre.setX(getSize().width - barre.getMiLargeur());
+    else
+      // barre centrée sur le pointeur
+      barre.setX(evt.getX());
   }
-  public void mouseDragged(MouseEvent evt) {}
+
+  public void mouseDragged(MouseEvent evt) {
+  }
 
   // Méthodes de l'interface MouseListener
   public void mouseClicked(MouseEvent evt) {
-    lanceBoule((int)(Math.random()*120)+30);
+    lanceBoule((int) (Math.random() * 120) + 30);
   }
 
-  public void mouseEntered(MouseEvent evt) {}
-  public void mouseExited(MouseEvent evt) {}
-  public void mousePressed(MouseEvent evt) {}
-  public void mouseReleased(MouseEvent evt) {}
+  public void mouseEntered(MouseEvent evt) {
+  }
+
+  public void mouseExited(MouseEvent evt) {
+  }
+
+  public void mousePressed(MouseEvent evt) {
+  }
+
+  public void mouseReleased(MouseEvent evt) {
+  }
 }

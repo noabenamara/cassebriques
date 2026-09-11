@@ -9,43 +9,43 @@ class Barre {
   private Color couleur;
 
   public Barre() {
-    x=175;
-    y=310;
-    miLargeur=25;
-    hauteur=9;
+    x = 175;
+    y = 310;
+    miLargeur = 25;
+    hauteur = 9;
     couleur = Color.blue;
   }
 
   public int getX() {
-      return x;
+    return x;
   }
 
   public void setX(int newVal) {
-       x=newVal;
+    x = newVal;
   }
 
   public int getY() {
-      return y;
+    return y;
   }
 
   public int getMiLargeur() {
-      return miLargeur;
+    return miLargeur;
   }
 
   public void setMiLargeur(int newVal) {
-       miLargeur=newVal;
+    miLargeur = newVal;
   }
 
   public int getHauteur() {
-      return hauteur;
+    return hauteur;
   }
 
   public Color getCouleur() {
-      return couleur;
+    return couleur;
   }
 
   public void dessine(Graphics2D motif) {
     motif.setColor(couleur);
-    motif.fillRect(x-miLargeur,y,miLargeur*2,hauteur);
+    motif.fillRect(x - miLargeur, y, miLargeur * 2, hauteur);
   }
- }
+}

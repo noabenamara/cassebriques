@@ -1,10 +1,9 @@
 import java.awt.*;
 
-
 public class bonusVie extends Bonus {
-    public bonusVie(){
+    public bonusVie() {
         super();
-        couleur=Color.ORANGE;
-        effect=3;
-    }    
+        couleur = Color.ORANGE;
+        effect = 3;
+    }
 }
