@@ -40,7 +40,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private int vague;
 
   // liste des nouveaux objet actif sur l'ecran
-  private List<Bonus> Lbonus = new ArrayList<>();
+  private List<Bonus> Lbonus;
 
   public EspaceJeu() {
 
@@ -60,6 +60,9 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
 
     // nombre de vague
     vague = VAGUE;
+
+    // objet en jeu
+    Lbonus = new ArrayList<>();
 
     // Gestion des évenement liés à la souris
       addMouseMotionListener(this);
@@ -91,6 +94,9 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     // nombre de vague
     vague = VAGUE;
 
+    // objet en jeu
+    Lbonus = new ArrayList<>();
+
     // Lancement de l'exécution du jeu dans un thread
     action = new Thread(this);
     action.start();
@@ -100,6 +106,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     phase=ATTEND;
     delai=DELAI;
     vie=VIE;
+    Lbonus.clear();
   }
 
   // Traitement central exécuté avec une périodicité précise
@@ -140,9 +147,9 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           else {
             // Rebond (ou non) sur la barre ?
             if (boule.getY() > 310 - boule.getRayon()) {
-              if ((boule.getX() - boule.getRayon() < barre.getX() + barre.getMiLargeur())
+              if (boule.getX() - boule.getRayon() < barre.getX() + barre.getMiLargeur()
               &&
-                (boule.getX() + boule.getRayon() > barre.getX() - barre.getMiLargeur())) {
+                boule.getX() + boule.getRayon() > barre.getX() - barre.getMiLargeur()) {
                 // Rebond sur la barre
                 // Le rebond dépend de la zone de la barre touchée
                 rebondSurBarre(boule.getX() - barre.getX());
