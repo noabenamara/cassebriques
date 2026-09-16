@@ -1,10 +1,11 @@
 //package cassebriques;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 class Boule {
   // x et y désignent les coordonnées du centre de la boule
-  private int x, y, depX, depY, rayon, vitesse;
+  private int depX, depY, rayon, vitesse, x, y;
   private Color couleur;
 
   public Boule() {
@@ -44,14 +45,14 @@ class Boule {
     depY = -depY;
   }
 
-  public void place(int newX, int newY) {
-    x = newX;
-    y = newY;
+  public void deplace() {
+    x += depX;
+    y += depY;
   }
 
-  public void deplace() {
-    x = x + depX;
-    y = y + depY;
+  public void dessine(Graphics2D motif) {
+    motif.setColor(couleur);
+    motif.fillOval(x - rayon, y - rayon, rayon * 2, rayon * 2);
   }
 
   public int getRayon() {
@@ -62,16 +63,15 @@ class Boule {
     return x;
   }
 
+  public void setX(int x) {
+    this.x = x;
+  }
+
   public int getY() {
     return y;
   }
 
-  public Color getCouleur() {
-    return couleur;
-  }
-
-  public void dessine(Graphics2D motif) {
-    motif.setColor(couleur);
-    motif.fillOval(x - rayon, y - rayon, rayon * 2, rayon * 2);
+  public void setY(int y) {
+    this.y = y;
   }
 }

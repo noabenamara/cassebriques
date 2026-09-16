@@ -13,7 +13,7 @@ class Mur {
     // Affectaion aléatoire de briques au mur
     for (int l = 0; l < 10; l++) {
       for (int c = 0; c < 20; c++) {
-        switch (random.nextInt(1, 5)) {
+        switch (random.nextInt(5, 6)) {
           case 1:
             mur[l][c] = new BriqueRetourNorme();
             break;
@@ -26,11 +26,15 @@ class Mur {
           case 4:
             mur[l][c] = new BriqueVie();
             break;
+          case 5:
+            mur[l][c] = new BriqueBouleBonus();
+            break;
           default:
             mur[l][c] = new Brique();
         }
-        mur[l][c].positionne(c * (mur[l][c].getLargeur() + 1),
-            l * (mur[l][c].getHauteur() + 1));
+        mur[l][c].setX(c * (mur[l][c].getLargeur() + 1));
+        mur[l][c].setY(l * (mur[l][c].getHauteur() + 1));
+            
       }
     }
     nbBriques = 200;
@@ -44,7 +48,7 @@ class Mur {
       return false;
     } else
     // Si la brique à ces cordonnées était déjà détruite ...
-    if (mur[l][c].isDetruite()) {
+    if (mur[l][c].getIsDetruite()) {
       // Le mur n'a pas été percuté
       return false;
     } else {
@@ -58,11 +62,11 @@ class Mur {
     // Si les coordonnées sont dans le mur (pas de coordonnées hors tableau)
     if (l >= 0 && l < 10 && c >= 0 && c < 20) {
       // Si la brique à ces coordonnées n'était pas détruite ...
-      if (!mur[l][c].isDetruite()) {
+      if (!mur[l][c].getIsDetruite()) {
         // La brique reçoit un choc (qui peut avoir une conséquence)
         consequence = mur[l][c].choc();
         // Si le choc a détruit la brique ...
-        if (mur[l][c].isDetruite()) {
+        if (mur[l][c].getIsDetruite()) {
           // Une brique en moins, une !
           nbBriques--;
         }
@@ -88,7 +92,7 @@ class Mur {
     for (int l = 0; l < 10; l++) {
       for (int c = 0; c < 20; c++) {
         // Si la brique n'est pas détruite ...
-        if (!mur[l][c].isDetruite())
+        if (!mur[l][c].getIsDetruite())
           // On la dessine
           mur[l][c].dessine(support);
       }

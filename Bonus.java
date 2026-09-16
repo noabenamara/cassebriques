@@ -1,7 +1,8 @@
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
-public class Bonus {
-    private int x, y, vitesse, largeur, hauteur;
+public class Bonus{
+    private int vitesse, largeur, hauteur, x, y;
     protected Color couleur;
     protected boolean isdetruite;
     protected int effect;
@@ -18,21 +19,13 @@ public class Bonus {
         y += vitesse;
     }
 
-    public boolean isDetruite() {
+    public boolean getIsDetruite() {
         return isdetruite;
     }
 
     public void dessine(Graphics2D motif) {
         motif.setColor(couleur);
         motif.fillRect(x, y, largeur, hauteur);
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public int getX() {
@@ -42,7 +35,6 @@ public class Bonus {
     public int getY() {
         return y;
     }
-
     public int getLargeur() {
         return largeur;
     }

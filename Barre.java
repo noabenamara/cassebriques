@@ -1,11 +1,12 @@
 //package cassebriques;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 class Barre {
   // x es la coordonnée horizontale du centre de la barre
   // et y du haut de la barre
-  private int x, y, miLargeur, hauteur;
+  private int miLargeur, hauteur, x, y;
   private Color couleur;
 
   public Barre() {
@@ -13,39 +14,35 @@ class Barre {
     y = 310;
     miLargeur = 25;
     hauteur = 9;
-    couleur = Color.blue;
+    couleur = Color.BLUE;
   }
 
-  public int getX() {
-    return x;
-  }
-
-  public void setX(int newVal) {
-    x = newVal;
-  }
-
-  public int getY() {
-    return y;
+  public void dessine(Graphics2D motif) {
+    motif.setColor(couleur);
+    motif.fillRect(x - miLargeur, y, miLargeur * 2, hauteur);
   }
 
   public int getMiLargeur() {
     return miLargeur;
   }
 
-  public void setMiLargeur(int newVal) {
-    miLargeur = newVal;
+  public void setMiLargeur(int miLargeur) {
+    this.miLargeur = miLargeur;
   }
 
   public int getHauteur() {
     return hauteur;
   }
 
-  public Color getCouleur() {
-    return couleur;
+  public int getX() {
+    return x;
   }
 
-  public void dessine(Graphics2D motif) {
-    motif.setColor(couleur);
-    motif.fillRect(x - miLargeur, y, miLargeur * 2, hauteur);
+  public void setX(int x) {
+    this.x = x;
+  }
+
+  public int getY() {
+    return y;
   }
 }
