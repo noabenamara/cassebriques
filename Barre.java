@@ -1,11 +1,12 @@
 //package cassebriques;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 class Barre {
   // x es la coordonnée horizontale du centre de la barre
   // et y du haut de la barre
-  private int x, y, miLargeur, hauteur;
+  private int miLargeur, hauteur, x, y;
   private Color couleur;
 
   // Largeur de référence (valeur d'origine) et largeur minimale autorisée
@@ -13,53 +14,39 @@ class Barre {
   private final int MI_LARGEUR_MIN=8;
 
   public Barre() {
-    x=175;
-    y=310;
-    miLargeur=MI_LARGEUR_DEFAUT;
-    hauteur=9;
-    couleur = Color.blue;
-  }
-
-  // Réduit la demi-largeur de la barre, sans descendre sous le minimum
-  public void retrecit(int valeur) {
-    miLargeur = Math.max(MI_LARGEUR_MIN, miLargeur - valeur);
-  }
-
-  // Remet la barre à sa largeur d'origine (utilisé par la brique rose)
-  public void reinitialiseLargeur() {
-    miLargeur = MI_LARGEUR_DEFAUT;
-  }
-
-  public int getX() {
-      return x;
-  }
-
-  public void setX(int newVal) {
-       x=newVal;
-  }
-
-  public int getY() {
-      return y;
-  }
-
-  public int getMiLargeur() {
-      return miLargeur;
-  }
-
-  public void setMiLargeur(int newVal) {
-       miLargeur=newVal;
-  }
-
-  public int getHauteur() {
-      return hauteur;
-  }
-
-  public Color getCouleur() {
-      return couleur;
+    x = 175;
+    y = 310;
+    miLargeur = 25;
+    hauteur = 9;
+    couleur = Color.BLUE;
   }
 
   public void dessine(Graphics2D motif) {
     motif.setColor(couleur);
-    motif.fillRect(x-miLargeur,y,miLargeur*2,hauteur);
+    motif.fillRect(x - miLargeur, y, miLargeur * 2, hauteur);
   }
- }
+
+  public int getMiLargeur() {
+    return miLargeur;
+  }
+
+  public void setMiLargeur(int miLargeur) {
+    this.miLargeur = miLargeur;
+  }
+
+  public int getHauteur() {
+    return hauteur;
+  }
+
+  public int getX() {
+    return x;
+  }
+
+  public void setX(int x) {
+    this.x = x;
+  }
+
+  public int getY() {
+    return y;
+  }
+}

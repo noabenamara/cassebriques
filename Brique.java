@@ -1,50 +1,58 @@
 //package cassebriques;
 
-import java.awt.*;
-
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 class Brique {
-  private final int SIMPLE=0;
-  private int x, y, largeur, hauteur;
+  private final int SIMPLE = 0;
+  protected int largeur, hauteur, x, y;
   protected Color couleur;
-  protected boolean detruite;
+  protected boolean isdetruite;
+  protected Object contiensObjet;
 
   public Brique() {
-    largeur=17;
-    hauteur=14;
-    couleur=Color.green;
-    detruite=false;
+    largeur = 17;
+    hauteur = 14;
+    couleur = Color.GREEN;
+    isdetruite = false;
+    contiensObjet = null;
   }
 
   public int choc() {
     // Si la brique n'est pas déjà détruite
-    if (!detruite) {
-      detruite=true;
+    if (!isdetruite) {
+      isdetruite = true;
     }
     return SIMPLE;
   }
 
-public boolean isDetruite() {
-  return detruite;
-}
+  public void dessine(Graphics2D motif) {
+    // Dessin de la brique
+    motif.setColor(couleur);
+    motif.fillRect(x, y, largeur, hauteur);
+  }
 
-public void positionne(int newX, int newY) {
-  x=newX;
-  y=newY;
-}
+  public int getLargeur() {
+    return largeur;
+  }
 
-public int getHauteur() {
-  return hauteur;
-}
+  public int getHauteur() {
+    return hauteur;
+  }
 
-public int getLargeur() {
-  return largeur;
-}
+  public void setX(int x) {
+    this.x = x;
+  }
 
-public void dessine(Graphics2D motif){
-  // Dessin de la brique
-  motif.setColor(couleur);
-  motif.fillRect(x,y,largeur,hauteur);
-}
+  public void setY(int y) {
+    this.y = y;
+  }
 
+  public boolean getIsDetruite() {
+    return isdetruite;
+  }
+
+  public Object getObjet() {
+    return contiensObjet;
+  }
 }
