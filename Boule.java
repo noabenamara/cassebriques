@@ -50,6 +50,14 @@ class Boule {
     y=newY;
   }
 
+  public void setX(int newX) {
+    x = newX;
+  }
+
+  public void setY(int newY) {
+    y = newY;
+  }
+
   public void deplace() {
     x=x+depX;
     y=y+depY;
