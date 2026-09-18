@@ -85,7 +85,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
       mur = new Mur();
     }
     mur.construit();
-    // Premiére phase du jeu
+    // première phase du jeu
     phase = ATTEND;
     delai = DELAI;
 

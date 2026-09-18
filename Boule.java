@@ -3,9 +3,9 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-class Boule {
+class Boule extends dropObject{
   // x et y désignent les coordonnées du centre de la boule
-  private int depX, depY, rayon, vitesse, x, y;
+  private int depX, depY, rayon, vitesse;
   private Color couleur;
 
   public Boule() {
@@ -57,21 +57,5 @@ class Boule {
 
   public int getRayon() {
     return rayon;
-  }
-
-  public int getX() {
-    return x;
-  }
-
-  public void setX(int x) {
-    this.x = x;
-  }
-
-  public int getY() {
-    return y;
-  }
-
-  public void setY(int y) {
-    this.y = y;
   }
 }

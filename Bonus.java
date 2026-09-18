@@ -1,8 +1,8 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-public class Bonus{
-    private int vitesse, largeur, hauteur, x, y;
+public class Bonus extends dropObject {
+    private int vitesse, largeur, hauteur;
     protected Color couleur;
     protected boolean isdetruite;
     protected int effect;
@@ -28,13 +28,6 @@ public class Bonus{
         motif.fillRect(x, y, largeur, hauteur);
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
     public int getLargeur() {
         return largeur;
     }

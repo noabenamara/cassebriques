@@ -8,7 +8,7 @@ class Brique {
   protected int largeur, hauteur, x, y;
   protected Color couleur;
   protected boolean isdetruite;
-  protected Object contiensObjet;
+  protected dropObject contiensObjet;
 
   public Brique() {
     largeur = 17;
@@ -42,10 +42,12 @@ class Brique {
 
   public void setX(int x) {
     this.x = x;
+    contiensObjet.setX(x);
   }
 
   public void setY(int y) {
     this.y = y;
+    contiensObjet.setY(y);
   }
 
   public boolean getIsDetruite() {
