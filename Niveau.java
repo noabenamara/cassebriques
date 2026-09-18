@@ -112,6 +112,78 @@ public class Niveau {
         nbBriques = briques.size();
     }
 
+    /**
+     * Génère un niveau en fonction de la difficulté choisie.
+     * @param difficulte "facile", "moyen", "difficile" ou "extreme"
+     */
+    public void chargerNiveauParDifficulte(String difficulte) {
+        briques.clear(); // Nettoie la liste
+        
+        int largeurBrique = 17; //[cite: 5]
+        int hauteurBrique = 14; //[cite: 5]
+        int espacement = 3;
+        
+        // Déterminer le nombre de lignes selon la difficulté
+        int lignes = 3; 
+        if (difficulte.equals("moyen")) lignes = 5;
+        if (difficulte.equals("difficile")) lignes = 7;
+        if (difficulte.equals("extreme")) lignes = 8;
+
+        for (int ligne = 0; ligne < lignes; ligne++) {
+            for (int colonne = 0; colonne < 12; colonne++) {
+                Brique b = null;
+                
+                // --- Logique de répartition selon le mode ---
+                
+                if (difficulte.equals("facile")) {
+                    b = new Brique(); // Que des briques simples
+                } 
+                
+                else if (difficulte.equals("moyen")) {
+                    // La 1ère ligne est renforcée, le reste est simple
+                    if (ligne == 0) {
+                        b = new BriqueRenforcee(); //[cite: 8]
+                    } else {
+                        b = new Brique(); //[cite: 5]
+                    }
+                } 
+                
+                else if (difficulte.equals("difficile")) {
+                    // 2 lignes renforcées, des briques rapides au milieu
+                    if (ligne <= 1) {
+                        b = new BriqueRenforcee(); //[cite: 8]
+                    } else if (ligne == 3 && colonne % 3 == 0) {
+                        b = new BriqueBouleRapide(); //[cite: 7]
+                    } else {
+                        b = new Brique(); //[cite: 5]
+                    }
+                } 
+                
+                else if (difficulte.equals("extreme")) {
+                    // Beaucoup de pièges et de briques renforcées de manière aléatoire
+                    double hasard = Math.random();
+                    if (hasard < 0.4) {
+                        b = new BriqueRenforcee(); //[cite: 8]
+                    } else if (hasard < 0.6) {
+                        b = new BriqueRetrecitBarre(); //[cite: 10]
+                    } else if (hasard < 0.75) {
+                        b = new BriqueBouleRapide(); //[cite: 7]
+                    } else {
+                        b = new Brique(); //[cite: 5]
+                    }
+                }
+                
+                // Instanciation et placement de la brique
+                if (b != null) {
+                    int x = 40 + colonne * (largeurBrique + espacement);
+                    int y = 50 + ligne * (hauteurBrique + espacement);
+                    ajouterBrique(b, x, y);
+                }
+            }
+        }
+    }
+
+
     // Détermine si une brique existe à la position demandée et n'est pas détruite
     public boolean percute(int l, int c) {
         if (l < 0 || l >= LIGNES || c < 0 || c >= COLONNES) {
