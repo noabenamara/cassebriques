@@ -42,12 +42,14 @@ class Brique {
 
   public void setX(int x) {
     this.x = x;
-    contiensObjet.setX(x);
+    if (contiensObjet != null)
+      contiensObjet.setX(x);
   }
 
   public void setY(int y) {
     this.y = y;
-    contiensObjet.setY(y);
+    if (contiensObjet != null)
+      contiensObjet.setY(y);
   }
 
   public boolean getIsDetruite() {
