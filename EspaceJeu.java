@@ -27,6 +27,11 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private final int NORME = 1;
   private final int RAPIDE = 2;
   private final int BONUS_VIE = 3;
+  private final int SIMPLE=0;
+  private final int NORME=1;
+  private final int RAPIDE=2;
+  private final int RETRECIT=3;
+  
 
   // Champs d'instance
   private Thread action;
@@ -35,8 +40,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private int delai;
   private Barre barre;
   private Mur mur;
-  private int vie;
-  private int vague;
+  private int vies=3;
 
   // liste des nouveaux objet actif sur l’écran
   private List<Bonus> Lbonus;
@@ -51,10 +55,8 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     delai = DELAI;
 
     // phase d'attente
-    phase = ATTEND;
-
-    // vie du joueur
-    vie = VIE;
+    phase=ATTEND;
+    //vies=3;
 
     // nombre de vague
     vague = VAGUE;
@@ -72,6 +74,8 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   }
 
   public void initialiseNiveau() {
+
+    vies =3;
 
     // Arrêt du thread action s'il est en cours d'exécution.
     fini = true;
@@ -142,9 +146,16 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           isWin();
           break;
 
-        case SORT:
-          showMessageDialog("C'est perdu !", "Casse briques");
-          fini = true;
+        case SORT :
+          vies--;
+          if (vies == 0) {
+            JOptionPane.showMessageDialog(this,"GAME OVER !","Casse briques",
+                          JOptionPane.INFORMATION_MESSAGE);
+            fini=true;
+          }
+          else {
+            phase=ATTEND;
+          }
           break;
 
         case GAGNE:
@@ -379,6 +390,11 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     // Au tout départ le mur n'existe pas
     if (mur != null)
       mur.dessine(comp2D);
+
+    // Affichage du nombre de vies restantes
+    comp2D.setColor(Color.BLACK);
+    comp2D.setFont(new Font("Arial", Font.BOLD, 12));
+    comp2D.drawString("Vies : " + vies, 10, 250);
   }
 
   // Méthodes de l'interface MouseMotionListener

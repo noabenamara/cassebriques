@@ -9,6 +9,10 @@ class Barre {
   private int miLargeur, hauteur, x, y;
   private Color couleur;
 
+  // Largeur de référence (valeur d'origine) et largeur minimale autorisée
+  private final int MI_LARGEUR_DEFAUT=25;
+  private final int MI_LARGEUR_MIN=8;
+
   public Barre() {
     x = 175;
     y = 310;
