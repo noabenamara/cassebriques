@@ -6,12 +6,13 @@ public class BriqueBouleBonus extends Brique {
   public BriqueBouleBonus() {
     super();
     couleur = Color.ORANGE;
-
+    
     contiensBoule = new Boule();
-    contiensBoule.setX(getX() / 2);
-    contiensBoule.setY(getY() / 2);
+    
+    contiensBoule.setX(x/2);
+    contiensBoule.setY(y/2);
     contiensBoule.angleDep(90);
 
-    setObjet(contiensBoule);
+    contiensObjet = contiensBoule;
   }
 }

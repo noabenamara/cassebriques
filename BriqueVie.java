@@ -1,9 +1,13 @@
 import java.awt.Color;
 
+/**
+ * BriqueVie
+ */
 class BriqueVie extends Brique {
+
   public BriqueVie() {
     super();
     couleur = Color.BLUE;
-    setObjet(new bonusVie());
+    contiensObjet = new bonusVie();
   }
 }

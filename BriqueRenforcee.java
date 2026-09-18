@@ -1,3 +1,5 @@
+//package cassebriques;
+
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.ListIterator;
@@ -20,4 +22,5 @@ class BriqueRenforcee extends Brique {
 
     return SIMPLE;
   }
+
 }
