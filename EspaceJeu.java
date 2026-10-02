@@ -31,6 +31,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private final int NORME = 1;
   private final int RAPIDE = 2;
   private final int BONUS_VIE = 3;
+  private final int laser = 5;
 
   // Champs d'instance
   private Thread action;
@@ -42,10 +43,12 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private int vie;
   private int vague;
   private Clip backgroudSound;
+  private Boolean laserBonus;
 
   // liste des nouveaux objet actif sur l’écran
   private List<Bonus> Lbonus;
   private List<Boule> Lboule;
+  private List<Laser> Llaser;
 
   public EspaceJeu() {
 
@@ -67,6 +70,9 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     // objet en jeu
     Lbonus = new ArrayList<>();
     Lboule = new ArrayList<>();
+    Llaser = new ArrayList<>();
+
+    laserBonus = false;
 
     // Création de la boule
     Lboule.add(new Boule());
@@ -103,6 +109,10 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     // objet en jeu
     Lbonus = new ArrayList<>();
     Lboule = new ArrayList<>();
+    Llaser = new ArrayList<>();
+
+
+    laserBonus = false;
 
     // Création de la boule
     Lboule.add(new Boule());
@@ -124,8 +134,10 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     phase = ATTEND;
     delai = DELAI;
     vie = VIE;
+    laserBonus = false;
     Lbonus.clear();
     Lboule.clear();
+    Llaser.clear();
     Lboule.add(new Boule());
   }
 
@@ -181,6 +193,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           break;
       }
       BonusManager();
+      laserManager();
 
       // on redessine l'espace de jeu
       repaint();
@@ -402,6 +415,40 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     Lbonus.removeAll(removable_bonus);
   }
 
+  private void laserManager() {
+    List<Laser> removable_laser = new ArrayList<>();
+    for (Laser laser : Llaser) {
+      laser.deplace();
+      if (collisionBriquelaser(laser) || laser.getY() + laser.getHauteur() / 2 < 0)
+        removable_laser.add(laser);
+    }
+    Llaser.removeAll(removable_laser);
+  }
+
+  private boolean collisionBriquelaser(Laser laser) {
+    int hauteur = mur.getHauteurBrique();
+    int largeur = mur.getLargeurBrique();
+
+    for (int l = 0; l < 10; l++) {
+      for (int c = 0; c < 20; c++) {
+        if (!mur.percute(l, c))
+          continue;
+
+        int xBrique = c * (largeur + 1);
+        int yBrique = l * (hauteur + 1);
+
+        if (laser.getX() < xBrique + largeur
+            && laser.getX() + laser.getLargeur() > xBrique
+            && laser.getY() < yBrique + hauteur
+            && laser.getY() + laser.getHauteur() > yBrique) {
+          mur.casse(l, c);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   public void modifJeu(int action) {
     switch (action) {
       case NORME:
@@ -416,6 +463,15 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
       case BONUS_VIE:
         vie++;
         break;
+      case laser:
+        if (!laserBonus) {
+          laserBonus = true;
+          try {
+            playClip("ressources/SoundEffect/Game/getBonusLaser.wav");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
     }
   }
 
@@ -457,6 +513,9 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     Lboule.forEach((boule) -> {
       boule.dessine(comp2D);
     });
+    Llaser.forEach((laser) -> {
+      laser.dessine(comp2D);
+    });
     // Dessin du mur de brique
     // Au tout départ le mur n'existe pas
     if (mur != null)
@@ -485,6 +544,14 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   // Méthodes de l'interface MouseListener
   public void mouseClicked(MouseEvent evt) {
     lanceBoule((int) (Math.random() * 120) + 30, Lboule.getFirst());
+    if (laserBonus) {
+      Llaser.add(new Laser(barre.getX(), barre.getY() - barre.getHauteur()));
+      try {
+        playClip("ressources/SoundEffect/Game/laserSound.wav");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public void mouseEntered(MouseEvent evt) {

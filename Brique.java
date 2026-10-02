@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 class Brique {
-  private final int SIMPLE = 0;
+  protected int effect;
   protected int largeur, hauteur, x, y;
   protected Color couleur;
   protected boolean isdetruite;
@@ -16,6 +16,7 @@ class Brique {
     couleur = Color.GREEN;
     isdetruite = false;
     contiensObjet = null;
+    effect = 0;
   }
 
   public int choc() {
@@ -23,7 +24,7 @@ class Brique {
     if (!isdetruite) {
       isdetruite = true;
     }
-    return SIMPLE;
+    return effect;
   }
 
   public void dessine(Graphics2D motif) {

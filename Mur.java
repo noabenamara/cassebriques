@@ -13,7 +13,7 @@ class Mur {
     // affectation aléatoire de briques au mur
     for (int l = 0; l < 10; l++) {
       for (int c = 0; c < 20; c++) {
-        switch (random.nextInt(1, 6)) {
+        switch (random.nextInt(1, 7)) {
           case 1:
             mur[l][c] = new BriqueRetourNorme();
             break;
@@ -28,6 +28,9 @@ class Mur {
             break;
           case 5:
             mur[l][c] = new BriqueBouleBonus();
+            break;
+          case 6:
+            mur[l][c] = new Briquelaser();
             break;
           default:
             mur[l][c] = new Brique();
