@@ -1,10 +1,14 @@
 //package cassebriques;
 
 import java.awt.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 class EspaceJeu extends JPanel implements Runnable, MouseListener,
     MouseMotionListener {
@@ -37,6 +41,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   private Mur mur;
   private int vie;
   private int vague;
+  private Clip backgroudSound;
 
   // liste des nouveaux objet actif sur l’écran
   private List<Bonus> Lbonus;
@@ -102,6 +107,12 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     // Création de la boule
     Lboule.add(new Boule());
 
+    try {
+      if (backgroudSound == null || !backgroudSound.isRunning())
+        backgroudSound = playRandomBackgroundSound();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     // Lancement de l'exécution du jeu dans un thread
     action = new Thread(this);
     action.start();
@@ -120,6 +131,12 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
 
   // Traitement central exécuté avec une périodicité précise
   public void run() {
+    try {
+      if (backgroudSound == null || !backgroudSound.isRunning())
+        backgroudSound = playRandomBackgroundSound();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     fini = false;
     vie = VIE;
     while (!fini) {
@@ -135,6 +152,7 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
         // La boule roule
         case ROULE:
           new ArrayList<>(Lboule).forEach(boule -> {
+            boule.deplace();
             bordsCollisionBoule(boule);
             rebondBarre(boule);
             rebondBriqueBoule(boule);
@@ -143,11 +161,21 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           break;
 
         case SORT:
+          try {
+            playClip("ressources/SoundEffect/Game/finishGame.wav");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
           showMessageDialog("C'est perdu !", "Casse briques");
           fini = true;
           break;
 
         case GAGNE:
+          try {
+            playClip("ressources/SoundEffect/Game/finishGame.wav");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
           showMessageDialog("Bravo, vous avez fini la vague " + vague, "Casse briques");
           changeNiveaux();
           break;
@@ -168,10 +196,20 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     if (boule.getX() < boule.getRayon()) {
       // Rebond sur le bord gauche
       boule.chocH();
+      try {
+        playClip("ressources/SoundEffect/Game/rebondBoule.wav");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     } else {
       // Rebond sur le bord droit
       if (boule.getX() > getSize().width - boule.getRayon()) {
         boule.chocH();
+        try {
+          playClip("ressources/SoundEffect/Game/rebondBoule.wav");
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
       }
     }
 
@@ -180,6 +218,11 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
       boule.chocV();
       boule.setX(boule.getX());
       boule.setY(boule.getRayon());
+      try {
+        playClip("ressources/SoundEffect/Game/rebondBoule.wav");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
 
     // Si la boule touche le fond ...
@@ -193,7 +236,8 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   }
 
   public void rebondBarre(Boule boule) {
-    if (boule.getY() > 310 - boule.getRayon()
+    if (boule.getRayon() <= barre.getY()
+        && boule.getY() + boule.getRayon() >= barre.getY()
         &&
         boule.getX() - boule.getRayon() < barre.getX() + barre.getMiLargeur()
         &&
@@ -203,6 +247,11 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
       // Rebond sur la barre
       int impact = boule.getX() - barre.getX();
       boule.chocV();
+      try {
+        playClip("ressources/SoundEffect/Game/rebondBoule.wav");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
       // La barre est divisée en 5 parties. Chaque partie provoque un rebond différent
       // Partie extrême gauche : Augmentation de l'angle de 30 degrés
       if (impact < -(barre.getMiLargeur() * 0.6))
@@ -221,13 +270,11 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
         boule.modifAngle(-15);
 
       // La partie centrale de la barre provoque un rebond normal
+      boule.setY(barre.getY() - boule.getRayon());
     }
   }
 
   public void rebondBriqueBoule(Boule boule) {
-    // Déplacement de la boule
-    boule.deplace();
-
     // Gestion du choc avec une brique
     // Récupération de la hauteur d'une brique
     int hauteur = mur.getHauteurBrique();
@@ -250,12 +297,22 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
         if (mur.percute(l1, c2)) {
           // Choc vertical
           boule.chocV();
+          try {
+            playClip("ressources/SoundEffect/Game/rebondBoule.wav");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         } else {
           // et coin inférieur gauche
           boule.chocH();
           if (!mur.percute(l2, c1))
             // Choc vertical
             boule.chocV();
+          try {
+            playClip("ressources/SoundEffect/Game/rebondBoule.wav");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         }
       } else {
         // Coin supérieur droit ...
@@ -265,6 +322,11 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           if (!mur.percute(l2, c2))
             // Choc vertical
             boule.chocV();
+          try {
+            playClip("ressources/SoundEffect/Game/rebondBoule.wav");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         } else {
           // Coin inférieur gauche ...
           if (mur.percute(l2, c1)) {
@@ -273,12 +335,22 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
             if (!mur.percute(l2, c2))
               // Choc horizontal
               boule.chocH();
+            try {
+              playClip("ressources/SoundEffect/Game/rebondBoule.wav");
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           } else {
             // Coin inférieur droit
             if (mur.percute(l2, c2)) {
               // Double choc
               boule.chocV();
               boule.chocH();
+              try {
+                playClip("ressources/SoundEffect/Game/rebondBoule.wav");
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             }
           }
         }
@@ -319,6 +391,11 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
           bonus.getY() + bonus.getHauteur() > barre.getY()) {
         modifJeu(bonus.getEffect());
         removable_bonus.add(bonus);
+        try {
+          playClip("ressources/SoundEffect/Game/getBonus.wav");
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
       } else if (bonus.getY() - bonus.getHauteur() > 310)
         removable_bonus.add(bonus);
     }
@@ -346,6 +423,11 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
     if (phase == ATTEND) {
       phase = ROULE;
       boule.angleDep(angle);
+      try {
+        playClip("ressources/SoundEffect/Game/bouleLaunch.wav");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -415,5 +497,26 @@ class EspaceJeu extends JPanel implements Runnable, MouseListener,
   }
 
   public void mouseReleased(MouseEvent evt) {
+  }
+
+  public Clip playClip(String filePath) throws Exception {
+    Clip clip = AudioSystem.getClip();
+    clip.open(
+        AudioSystem.getAudioInputStream(
+            new File(filePath).getAbsoluteFile()));
+    clip.start();
+
+    return clip;
+  }
+
+  private Clip playRandomBackgroundSound() throws Exception {
+    File ambianceFolder = new File("ressources/SoundEffect/Ambiance");
+    File[] musicFiles = ambianceFolder.listFiles(file -> file.getName().endsWith(".wav"));
+
+    if (musicFiles == null || musicFiles.length <= 0)
+      return null;
+
+    File musicFile = musicFiles[new Random().nextInt(0, musicFiles.length)];
+    return playClip(musicFile.getPath());
   }
 }
